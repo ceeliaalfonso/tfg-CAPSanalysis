@@ -1,26 +1,25 @@
 # tfg-CAPSanalysis
-# Documentación del Repositorio: Procesamiento de Datos Meteorológicos y Análisis de Inversiones Térmicas
+# Documentación del Repositorio: Procesamiento de datos meteorológicos y análisis de CAPs.
  # 1. Descripción General del Proyecto
-Este repositorio contiene el conjunto de datos, los scripts de procesamiento y los resultados finales correspondientes al estudio climático comparativo entre las estaciones meteorológicas de Villaceid y Villayuste. El objetivo principal de la investigación es la identificación, filtrado y caracterización de los fenómenos de inversión térmica entre ambas localizaciones, así como la posterior estimación de las aportaciones hídricas derivadas.
+Este repositorio contiene los datos de entrada, los scripts de procesamiento y los archivos de salida correspondientes al estudio comparativo entre las estaciones meteorológicas de Villaceid y Villayuste. El objetivo principal de la investigación es la identificación, filtrado y caracterización de los fenómenos de piscina de aire frío (CAP, por sus siglas en inglés) registrados en la zona junto con la posterior estimación de las aportaciones hídricas derivadas, así como una revisión de la bibliografía actual para comprender los posibles efectos a nivel ambiental que puedan derivarse de los resultados del análisis.
 
-A través de los módulos de programación incluidos, se automatiza la homogeneización de series temporales de origen heterogéneo y se aplican criterios de continuidad física para aislar los eventos meteorológicos de interés. El flujo de trabajo responde a las necesidades analíticas surgidas durante las distintas fases del estudio, transitando desde una perspectiva orientada a eventos aislados hacia un análisis continuo de la masa de aire y su humedad.
+Se utilizó el programa Python para automatizar la homogeneización de los datos de entrada. Además, se aplican criterios de continuidad temporal para agrupar cada evento como una unidad.
 
  # 2. Origen y Naturaleza de los Datos de Entrada
-Los datos meteorológicos de partida proceden de dos estaciones distintas y presentan características estructurales diferenciadas debido a las limitaciones de descarga de las plataformas de origen:
+Los datos meteorológicos de partida proceden de dos estaciones distintas y presentan características estructurales incompatibles debido a que vienen de distintas fuentes:
 
 Estación de Villaceid
-Los datos correspondientes a esta localización se almacenan en el directorio denominado datos villaceid. Esta carpeta contiene los registros meteorológicos en su estado bruto original, tal y como fueron extraídos del sistema de adquisición de datos de la estación, manteniendo la resolución temporal y el formato nativo sin modificaciones previas.
+Los datos correspondientes a esta localización fueron proporcionados por la Asociación Meteorológica del Noroeste Peninsular (NOROMET) y se almacenan en la carpeta "Datos villaceid". Esta carpeta contiene los registros en su estado original, tal y como fueron extraídos del sistema de adquisición de datos de la estación, manteniendo la resolución temporal y el formato nativo sin modificaciones previas.
 
 Estación de Villayuste
-Los datos de esta estación se encuentran en la carpeta villayuste. A diferencia de la estación anterior, estos registros requirieron una intervención manual previa a su incorporación al repositorio. Debido a que la interfaz web de origen limitaba la consulta a una visualización diaria y no permitía la descarga directa de series temporales continuas, fue necesario compilar y estructurar los datos de manera manuscrita, agrupándolos en archivos de periodicidad mensual para posibilitar su posterior tratamiento informático.
+Los datos de esta estación se encuentran en la carpeta "villayuste". A diferencia de la estación anterior, estos registros requirieron una intervención manual previa. Estos datos provienen de la plataforma web Weather Underground, la cual mostraba los registros en archivos diarios y no permitía la descarga directa de series temporales continuas, por ello fue necesario compilar los datos de manera manuscrita, agrupándolos en un archivo por mes.
 
   # 3. Metodología de Procesamiento y Flujo de Trabajo
-El análisis de la información se dividió en dos fases metodológicas independientes, motivadas por la evolución de las necesidades del estudio de investigación.
+El análisis de la información se dividió en dos procesos independientes, motivadas por la evolución de las necesidades del trabajo.
 
 #     Fase I: Identificación y Clasificación de Eventos de Inversión Térmica
-En la primera etapa del proyecto, el interés se centró en aislar aquellos periodos de tiempo específicos en los que se manifestaba un fenómeno de inversión térmica entre ambas estaciones. Para que un periodo fuera considerado como tal, debía cumplir con la condición física de que la temperatura registrada en la estación de Villaceid fuera estrictamente inferior a la registrada en Villayuste.
-
-Para procesar esta fase, se desarrolló una estructura de doce scripts de Python idénticos, donde cada uno se encargaba de analizar un mes específico del año. Con el propósito de simplificar la arquitectura del repositorio y facilitar su comprensión, se ha subido un único script como modelo representativo: analisis_eventos_julio.py.
+La primera etapa tenía como objetivo homogeneizar los datos para después identificar los eventos de CAP como unidades conjuntas de datos de inversión térmica continuada. 
+Para procesar esta fase, se desarrolló una estructura de doce scripts de Python idénticos, donde cada uno tenía dos archivos de entrada y se encargaba de analizar un mes específico del año. Por ejemplo; para el mes de julio se parte de los archivos "JULIO25_VILLACEID.xlsx" y "JULIO25_VILLAYUSTE.xlsx" (los mismos datos brutos presentados en este repositorio, pero renombrados de cara a facilitar su manejo) y se aplica el script de python "análisis_eventos_julio.py". Este código consta de tres fases en su estructura, delas cuales la primera  esta dedicada a homogeneizar la temporalidad de los datos, estableciendo un grid con frecuencia de 30 minutos para mostrar los datos de ambas estaciones con la misma temporalidad. La segunda parte del código compara los registros de temperatura de villaceid y de villayuste y elimina aquellos en que no se cumpla que la Tº de Villaceid es menor que la Tº de Villayuste (inversión térmica). Como último paso, al ejecutarlo se agrupan también los datos continuos en el tiempo como parte de un mismo evento, generando a su vez columnas con datos propios como la duración del evento o su inversión máxima.
 
 El algoritmo ejecuta los siguientes pasos de manera secuencial:
 
